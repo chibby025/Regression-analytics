@@ -1,0 +1,42 @@
+"""
+Created on Fri May 22 02:09:43 2020
+
+@author: HP
+"""
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Importing Dataset
+dataset=pd.read_csv("Position_Salaries.csv")
+x=dataset.iloc[:,1:2].values
+y=dataset.iloc[:,2:3].values
+
+# Fitting random Forest Regression results
+from sklearn.ensemble import RandomForestRegressor
+regressor=RandomForestRegressor(n_estimators=300,random_state=0)
+regressor.fit(x,y.ravel())
+
+#Visualising Random Forest Regression
+plt.scatter(x,y)
+plt.plot(x,regressor.predict(x),color="red")
+plt.title("Position Salaries-Random Forest")
+plt.xlabel("Gaming Steps")
+plt.ylabel("Points")
+plt.show()
+
+#Predicting Results
+y_pred=regressor.predict([[8.5]])
+
+#Visualizing Random Forest Results(Higher Definition)
+x_grid=np.arange(min(x),max(x),0.01)
+x_grid=x_grid.reshape(len(x_grid),1)
+plt.scatter(x,y,color="red")
+plt.plot(x_grid,regressor.predict(x_grid),color="blue")
+plt.title("Truth or Bluff (Random Forest Regression)")
+plt.xlabel("Position Level")
+plt.ylabel("Salary")
+plt.show()
+# Sometimes by increasing the number of decision trees we can improve prediction values
