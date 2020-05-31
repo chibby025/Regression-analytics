@@ -1,0 +1,30 @@
+"""
+Created on Wed May 13 19:09:57 2020
+
+@author: HP
+"""
+# Importing Libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+
+# Importing Data
+dataset=pd.read_csv("Iris.csv")
+x=dataset.iloc[:,:-1].values
+y=dataset.iloc[:,5].values
+
+# Training the dataset
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=1)
+
+classifier=DecisionTreeClassifier()
+classifier.fit(x_train,y_train)
+y_pred=classifier.predict(x_test)
+
+# Checking the Accuracy
+from sklearn.metrics import classification_report,confusion_matrix
+print(confusion_matrix(y_test,y_pred))
+print(classification_report(y_test, y_pred))
