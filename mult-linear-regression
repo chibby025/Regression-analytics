@@ -1,0 +1,67 @@
+"""
+Created on Fri May 15 22:53:23 2020
+
+@author: HP
+"""
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+dataset=pd.read_csv("50_Startups.csv")
+x=dataset.iloc[:,:-1].values
+y=dataset.iloc[:,4].values
+
+#Encoding Categorical Data
+#Encoding Independent Variable
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
+ct=ColumnTransformer(transformers=[("one_hot_encoder",OneHotEncoder(categories="auto"),[3])],remainder="passthrough")
+
+x=np.array(ct.fit_transform(x),dtype=np.float)
+#Avoiding Dummy Variable Trap
+x=x[:,1:]
+#Split dataset
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=0)
+
+#Fitting Multiple linear regression
+from sklearn.linear_model import LinearRegression
+regressor=LinearRegression()
+regressor.fit(x_train,y_train)
+
+#Predicting the test
+y_pred=regressor.predict(x_test)
+
+#Optimizing model using backward elimination
+import statsmodels.regression.linear_model as sm
+x=np.append(arr=np.ones((50,1)).astype(int),values=x,axis=1)
+
+x_opt=x[:,[0,1,2,3,4,5]]
+ols=sm.OLS(endog=y,exog=x_opt).fit()
+ols.summary()
+
+#removing the 3rd column
+x_opt=x[:,[0,1,3,4,5]]
+ols=sm.OLS(endog=y,exog=x_opt).fit()
+ols.summary()
+
+# removing 2nd column
+x_opt=x[:,[0,3,4,5]]
+ols=sm.OLS(endog=y,exog=x_opt).fit()
+ols.summary()
+
+#removing 3rd column
+x_opt=x[:,[0,3,5]]
+ols=sm.OLS(endog=y,exog=x_opt).fit()
+ols.summary()
+
+#removing 3rd column
+#removing 3rd column
+x_opt=x[:,[0,3]]
+ols=sm.OLS(endog=y,exog=x_opt).fit()
+ols.summary()
+
+#it shows that amount paid on reasearch increases with profit
