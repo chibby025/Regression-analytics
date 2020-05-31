@@ -1,0 +1,37 @@
+"""
+Created on Tue May 19 13:08:13 2020
+
+@author: HP
+"""
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Importing Dataset
+dataset=pd.read_csv("Position_Salaries.csv")
+x=dataset.iloc[:,1:2].values
+y=dataset.iloc[:,2:3].values
+
+#Splitting dataset into train and test set
+from sklearn.preprocessing import StandardScaler
+sc_x=StandardScaler()
+sc_y=StandardScaler()
+X=sc_x.fit_transform(x)
+Y=sc_y.fit_transform(y)
+
+
+from sklearn.svm import SVR
+regressor=SVR(kernel="rbf")
+regressor.fit(X,Y.ravel())
+#Visualizing Results
+plt.scatter(X,Y)
+plt.plot(X,regressor.predict(X),color="r")
+plt.xlabel("Steps")
+plt.ylabel("points")
+plt.show()
+
+#Predicting Results
+Y_pred=regressor.predict(sc_x.transform([[9.5]]))
+Y_pred=sc_y.inverse_transform(Y_pred)
